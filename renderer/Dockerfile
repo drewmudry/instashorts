@@ -12,14 +12,17 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY package.json tsconfig.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages ./packages
+COPY renderer ./renderer
+
 RUN npm install -g pnpm && pnpm install
 
-# Download Chrome Headless Shell during build
+# Download Chrome Headless Shell during build (needs to be in renderer dir or global?)
+# Remotion browser ensure usually checks locally.
+WORKDIR /app/renderer
 RUN npx -y -p @remotion/cli remotion browser ensure
 
-COPY src ./src
-
-RUN pnpm build
+# RUN pnpm build
 
 CMD ["pnpm", "start"]

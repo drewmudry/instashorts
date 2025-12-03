@@ -1,9 +1,9 @@
 import { Worker, Job } from "bullmq";
-import { connection } from "@/queues/client";
-import { db } from "@/db";
-import { video, scene } from "@/db/schema";
+import { connection } from "@instashorts/redis";
+import { db } from "@instashorts/db";
+import { video, scene } from "@instashorts/db";
 import { eq, asc } from "drizzle-orm";
-import { uploadBufferToGCS } from "@/lib/gcs";
+import { uploadBufferToGCS } from "@instashorts/storage";
 import { nanoid } from "nanoid";
 import { readFileSync, unlinkSync } from "fs";
 import { tmpdir } from "os";

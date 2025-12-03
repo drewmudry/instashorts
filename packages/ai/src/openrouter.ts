@@ -13,7 +13,7 @@ const openRouter = new OpenRouter({
 });
 
 const TEXT_MODEL = "google/gemini-2.5-flash";
-const IMAGE_MODEL = "google/gemini-3-pro-image-preview";
+
 
 /**
  * Generates a video script based on a theme

@@ -1,12 +1,12 @@
 import { Worker, Job } from "bullmq";
-import { connection, scriptQueue, voiceoverQueue, scenesQueue, sceneImageQueue, renderQueue } from "@/queues/client";
-import { db } from "@/db";
-import { video, scene, series, aivideo } from "@/db/schema";
+import { connection, scriptQueue, voiceoverQueue, scenesQueue, sceneImageQueue, renderQueue } from "@instashorts/redis";
+import { db } from "@instashorts/db";
+import { video, scene, series, aivideo } from "@instashorts/db";
 import { eq } from "drizzle-orm";
-import { generateVideoScript, generateVideoTitle, generateVideoScenes, generateScenesFromTimestamps } from "@/lib/ai/openrouter";
-import { generateVoiceoverWithTimestamps, convertCharactersToWords, convertWordsToSRT } from "@/lib/ai/elevenlabs";
-import { generateImage } from "@/lib/ai/replicate";
-import { uploadBufferToGCS } from "@/lib/gcs";
+import { OpenRouter } from "@instashorts/ai";
+import { generateVoiceoverWithTimestamps, convertCharactersToWords, convertWordsToSRT } from "@instashorts/ai";
+import { generateImage } from "@instashorts/ai";
+import { uploadBufferToGCS } from "@instashorts/storage";
 import { nanoid } from "nanoid";
 
 // ===========================
@@ -24,8 +24,8 @@ new Worker(
 
             // Generate script and title
             const [script, title] = await Promise.all([
-                generateVideoScript(theme),
-                generateVideoTitle(theme),
+                OpenRouter.generateVideoScript(theme),
+                OpenRouter.generateVideoTitle(theme),
             ]);
 
             // Update video
@@ -195,8 +195,8 @@ new Worker(
 
             // Add emojis if enabled
             if (videoRecord?.emojiCaptions) {
-                const { addEmojisToWords } = await import("@/lib/ai/openrouter");
-                words = await addEmojisToWords(words, script, videoRecord.theme);
+                const { OpenRouter } = await import("@instashorts/ai");
+                words = await OpenRouter.addEmojisToWords(words, script, videoRecord.theme);
             }
 
             const srtContent = convertWordsToSRT(words);
@@ -299,7 +299,7 @@ new Worker(
                 const wordTimings = videoRecord.wordTimings as Array<{ word: string; start: number; end: number }>;
 
                 // Generate scenes using the Sync-First strategy
-                const scenes = await generateScenesFromTimestamps(
+                const scenes = await OpenRouter.generateScenesFromTimestamps(
                     script,
                     wordTimings,
                     style || "Hypothetical Chain Reaction"
@@ -357,7 +357,7 @@ new Worker(
             const sceneCount = Math.max(3, Math.ceil(wordCount / 15));
 
             // Generate scenes
-            const scenes = await generateVideoScenes(script, theme, sceneCount, artStyle);
+            const scenes = await OpenRouter.generateVideoScenes(script, theme, sceneCount, artStyle);
 
             // Store scenes
             const sceneRecords = scenes.map((s) => ({

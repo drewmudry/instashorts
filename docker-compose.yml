@@ -20,7 +20,9 @@ services:
       - redis_data:/data
 
   web:
-    build: ./web
+    build:
+      context: .
+      dockerfile: web/Dockerfile
     ports:
       - "3000:3000"
     environment:
@@ -37,7 +39,9 @@ services:
       - .env
 
   worker:
-    build: ./worker
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       REDIS_HOST: redis
@@ -53,7 +57,9 @@ services:
       - .env
 
   renderer:
-    build: ./renderer
+    build:
+      context: .
+      dockerfile: renderer/Dockerfile
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       REDIS_HOST: redis
@@ -69,8 +75,11 @@ services:
       - .env
 
   studio:
-    build: ./web
-    command: pnpm db:studio
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    working_dir: /app/packages/db
+    command: pnpm studio
     ports:
       - "4983:4983"
     environment:

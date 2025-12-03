@@ -1,0 +1,22 @@
+{
+    "name": "@instashorts/ai",
+    "version": "0.1.0",
+    "private": true,
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "dependencies": {
+        "ai": "^5.0.93",
+        "@ai-sdk/elevenlabs": "^1.0.19",
+        "@ai-sdk/google-vertex": "^3.0.62",
+        "@ai-sdk/replicate": "^1.0.18",
+        "@elevenlabs/elevenlabs-js": "^2.23.0",
+        "@google-cloud/vertexai": "^1.10.0",
+        "@openrouter/sdk": "^0.2.9",
+        "dotenv": "^17.2.3",
+        "replicate": "^1.4.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "typescript": "^5"
+    }
+}
