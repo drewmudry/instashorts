@@ -25,7 +25,7 @@ export async function generateVideoScript(theme: string): Promise<string> {
             {
                 role: 'user',
                 content: `Write a compelling 1 paragraph script for a short video about: ${theme}. Make it engaging, clear, and suitable for a short-form video format. The script should be in paragraph format and should not have any voice changes or other formatting. Be slightly poetic in a way that the listener/reader can appreciate a conclusive story or theme by the end of the script.
-        The script should be approximately 50 words long.
+        The script should be approximately 150 words long (65 seconds long).
         
         IMPORTANT STYLE RULES:
         - Use simple, direct language. Avoid dashes, em-dashes, or compound words with hyphens.

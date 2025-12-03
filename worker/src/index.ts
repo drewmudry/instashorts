@@ -353,7 +353,8 @@ new Worker(
 
             // Determine scene count
             const wordCount = script.split(/\s+/).length;
-            const sceneCount = wordCount < 100 ? 3 : 10;
+            // Dynamic scene count: ~1 scene per 15 words, minimum 3 scenes
+            const sceneCount = Math.max(3, Math.ceil(wordCount / 15));
 
             // Generate scenes
             const scenes = await generateVideoScenes(script, theme, sceneCount, artStyle);
